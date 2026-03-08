@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto_flutter/core/app_colors.dart';
 import 'package:proyecto_flutter/core/assets.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 
 class AppBaner extends StatelessWidget implements PreferredSizeWidget {
   const AppBaner({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final nameTitle = context.watch<DashboardProvider>().nameTitle;
     return AppBar(
       backgroundColor: AppColors.primary,
       toolbarHeight: 80,
@@ -16,7 +19,7 @@ class AppBaner extends StatelessWidget implements PreferredSizeWidget {
         child: CircleAvatar(backgroundImage: AssetImage(Assets.perfilOne)),
       ),
       title: Text(
-        'Hola, Byron Toledo',
+        'Hola, $nameTitle',
         style: TextStyle(
           fontSize: 20,
           color: AppColors.letterswhite,

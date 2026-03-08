@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto_flutter/core/app_colors.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/views/dashboard_view.dart';
+import 'package:proyecto_flutter/features/history/presentation/state/history_provider.dart';
+import 'package:proyecto_flutter/features/history/presentation/views/history_trans_view.dart';
+import 'package:proyecto_flutter/features/transfers/presentation/views/transfers_view.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,9 +18,20 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App Bank Wallet',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => ChangeNotifierProvider<DashboardProvider>(
+          create: (_) => DashboardProvider(),
+          child: DashboardView(),
+        ),
+        '/transfers': (context) => Transfers(),
+        '/history': (context) => ChangeNotifierProvider<HistoryProvider>(
+          create: (_) => HistoryProvider(),
+          child: HistoryTransView(),
+        ),
+      },
       theme: ThemeData(primaryColor: AppColors.primary),
       debugShowCheckedModeBanner: false,
-      home: DashboardView(),
     );
   }
 }

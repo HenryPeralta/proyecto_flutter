@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_flutter/core/assets.dart';
-import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
+import 'package:proyecto_flutter/features/history/presentation/state/history_provider.dart';
 
-class CardClient extends StatelessWidget {
-  const CardClient({super.key});
+class CardClientTrans extends StatelessWidget {
+  const CardClientTrans({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final nameTitle = context.watch<DashboardProvider>().nameTitle;
-    final cardTitle = context.watch<DashboardProvider>().cardTitle;
+    final nameTitle = context.watch<HistoryProvider>().nameTitle;
+    final cardTitle = context.watch<HistoryProvider>().cardTitle;
     final accountNumberTitle = context
-        .watch<DashboardProvider>()
+        .watch<HistoryProvider>()
         .accountNumberTitle;
-    final balanceTitle = context.watch<DashboardProvider>().balanceTitle;
-    final monedaTitle = context.watch<DashboardProvider>().monedaTitle;
+    final balanceTitle = context.watch<HistoryProvider>().balanceTitle;
+    final monedaTitle = context.watch<HistoryProvider>().monedaTitle;
     return Stack(
       alignment: Alignment.topLeft,
       children: [

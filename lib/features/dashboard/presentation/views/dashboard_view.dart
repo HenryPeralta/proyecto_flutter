@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flutter/core/assets.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/app_baner.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/widgets/bottom_app_baner.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/card_client.dart';
-import 'package:proyecto_flutter/features/dashboard/presentation/widgets/menu_icon.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/widgets/wrap_menu.dart';
 // import 'package:proyecto_flutter/core/assets.dart';
 
 class DashboardView extends StatelessWidget {
@@ -10,25 +12,16 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<DashboardProvider>().userPerfil(
+      'Henry Peralta',
+      'henry.peralta',
+      // 'Byron Toledo',
+      // 'byron.toledo',
+    );
     return Scaffold(
       appBar: const AppBaner(),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          CardClient(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 65, vertical: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                IconWithLabel(Assets.wallet, 'Cuentas y Tarjetas'),
-                IconWithLabel(Assets.transfer, 'Transferencias'),
-                IconWithLabel(Assets.reportTrans, 'Reporte de Transacciones'),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: Column(children: [SizedBox(height: 20), CardClient(), WrapMenu()]),
+      bottomNavigationBar: BottomAppBanerNavigate(),
     );
   }
 }

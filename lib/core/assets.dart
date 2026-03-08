@@ -7,4 +7,6 @@ abstract class Assets {
   static const String wallet = 'assets/wallet.png';
   static const String transfer = 'assets/transfer.png';
   static const String reportTrans = 'assets/report_trans.png';
+  static const String prestamo = 'assets/loans.png';
+  static const String creditCard = 'assets/creditCard.png';
 }

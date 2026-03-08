@@ -32,7 +32,7 @@ class LoginButton extends StatelessWidget {
 
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15),
+              color: Color(0x26FF6A6A),
               blurRadius: 10,
               offset: const Offset(0, 5),
             )

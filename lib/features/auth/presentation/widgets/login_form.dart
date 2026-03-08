@@ -23,7 +23,7 @@ class LoginForm extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Color(0x26FF6A6A),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -48,7 +48,7 @@ class LoginForm extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Color(0x26FF6A6A),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),

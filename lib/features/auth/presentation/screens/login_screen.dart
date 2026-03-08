@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/login_header.dart';
 import '../widgets/login_form.dart';
 import '../widgets/login_button.dart';
+import '../../../home/presentation/screens/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,6 +26,14 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Login correcto ✅"),
+        ),
+      );
+
+      /// IR AL DASHBOARD
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
         ),
       );
 

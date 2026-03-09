@@ -4,7 +4,9 @@ import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard
 // import 'package:proyecto_flutter/features/dashboard/presentation/widgets/app_baner.dart';
 // import 'package:proyecto_flutter/features/dashboard/presentation/widgets/bottom_app_baner.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/card_client.dart';
-import 'package:proyecto_flutter/features/dashboard/presentation/widgets/wrap_menu.dart';
+//import 'package:proyecto_flutter/features/dashboard/presentation/widgets/wrap_menu.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/widgets/dashboard_header.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/widgets/recent_transactions.dart';
 // import 'package:proyecto_flutter/core/assets.dart';
 
 class DashboardView extends StatefulWidget {
@@ -38,33 +40,13 @@ class _DashboardViewState extends State<DashboardView> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 106, 114, 255),
-                  Color(0xFFFFB86C),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: const Center(
-              child: Text(
-                'Dashboard',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          DashboardHeader(
+            title: "Dashboard"
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           CardClient(),
-          WrapMenu()
+          const SizedBox(height: 10),
+          const RecentTransactions(),
         ],
       ),
       // bottomNavigationBar: BottomAppBanerNavigate(),

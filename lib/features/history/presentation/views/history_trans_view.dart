@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_flutter/features/history/presentation/widgets/app_baner.dart';
+//import 'package:proyecto_flutter/features/history/presentation/widgets/app_baner.dart';
 import 'package:proyecto_flutter/features/history/presentation/state/history_provider.dart';
 import 'package:proyecto_flutter/features/history/presentation/widgets/card_client_trans.dart';
+import 'package:proyecto_flutter/features/dashboard/presentation/widgets/dashboard_header.dart';
 
 class HistoryTransView extends StatefulWidget {
   const HistoryTransView({super.key});
@@ -25,9 +26,12 @@ class _HistoryTransViewState extends State<HistoryTransView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBaner(),
       body: Column(
         children: [
+          DashboardHeader(
+            title: "Historial de Transacciones"
+          ),
+          const SizedBox(height: 10),
           CardClientTrans(),
           ListView(
             shrinkWrap: true,

@@ -47,137 +47,150 @@ class _DashboardLayoutState extends State<DashboardLayout> {
     setState(() {
       currentPage = page;
     });
+    Navigator.pop(context); // Cierra el drawer después de navegar
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          // Sidebar con botones laterales
-          _buildSidebar(),
-          // Contenido principal
-          Expanded(
-            child: _views[currentPage] ?? _views[MenuItem.dashboard]!,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSidebar() {
-    return Container(
-      width: 280,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFFFF6A6A),
-            Color(0xFFFFB86C),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Color(0xFF333333)),
+        titleTextStyle: const TextStyle(
+          color: Color(0xFF333333),
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      child: Column(
-        children: [
-          // Header del sidebar
-          Container(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    size: 35,
-                    color: Colors.grey,
-                  ),
+      drawer: Drawer(
+        width: 280,
+        child: Column(
+          children: [
+            // Header con gradiente
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFFF6A6A),
+                    Color(0xFFFFB86C),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              child: SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
                     children: [
-                      Text(
-                        widget.userName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      const CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person,
+                          size: 35,
+                          color: Colors.grey,
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      Text(
-                        widget.userEmail,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.userName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              widget.userEmail,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Botones de navegación
-          _buildSidebarButton(
-            icon: Icons.dashboard_outlined,
-            title: "Dashboard",
-            page: MenuItem.dashboard,
-          ),
-
-          const SizedBox(height: 5),
-
-          _buildSidebarButton(
-            icon: Icons.swap_horiz,
-            title: "Transferencias",
-            page: MenuItem.transfer,
-          ),
-
-          const SizedBox(height: 5),
-
-          _buildSidebarButton(
-            icon: Icons.history,
-            title: "Historial",
-            page: MenuItem.history,
-          ),
-
-          const SizedBox(height: 5),
-
-          _buildSidebarButton(
-            icon: Icons.settings_outlined,
-            title: "Configuración",
-            page: MenuItem.settings,
-          ),
-
-          const Spacer(),
-
-          // Botón de logout
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
               ),
-              leading: const Icon(
-                Icons.logout,
+            ),
+
+            // Contenido blanco
+            Expanded(
+              child: Container(
                 color: Colors.white,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+
+                    // Botones de navegación
+                    _buildSidebarButton(
+                      icon: Icons.dashboard_outlined,
+                      title: "Dashboard",
+                      page: MenuItem.dashboard,
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    _buildSidebarButton(
+                      icon: Icons.swap_horiz,
+                      title: "Transferencias",
+                      page: MenuItem.transfer,
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    _buildSidebarButton(
+                      icon: Icons.history,
+                      title: "Historial",
+                      page: MenuItem.history,
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    _buildSidebarButton(
+                      icon: Icons.settings_outlined,
+                      title: "Configuración",
+                      page: MenuItem.settings,
+                    ),
+
+                    const Spacer(),
+
+                    // Botón de logout
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        leading: const Icon(
+                          Icons.logout,
+                          color: Color(0xFF666666),
+                        ),
+                        title: const Text(
+                          "Cerrar Sesión",
+                          style: TextStyle(color: Color(0xFF666666)),
+                        ),
+                        onTap: _handleLogout,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              title: const Text(
-                "Cerrar Sesión",
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: _handleLogout,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+      body: _views[currentPage] ?? _views[MenuItem.dashboard]!,
     );
   }
 
@@ -189,24 +202,31 @@ class _DashboardLayoutState extends State<DashboardLayout> {
     final isSelected = currentPage == page;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: ListTile(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        leading: Icon(
-          icon,
-          color: isSelected ? const Color(0xFFFF6A6A) : Colors.white,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? const Color(0xFFFF6A6A) : Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Container(
+        decoration: isSelected
+            ? BoxDecoration(
+                color: const Color(0xFFFFE4D6),
+                borderRadius: BorderRadius.circular(12),
+              )
+            : null,
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
+          leading: Icon(
+            icon,
+            color: isSelected ? const Color(0xFFFF6A6A) : const Color(0xFF666666),
+          ),
+          title: Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? const Color(0xFFFF6A6A) : const Color(0xFF666666),
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          onTap: () => _navigateToPage(page),
         ),
-        selected: isSelected,
-        selectedTileColor: const Color(0xFFFFE4D6),
-        onTap: () => _navigateToPage(page),
       ),
     );
   }

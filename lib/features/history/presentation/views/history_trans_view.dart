@@ -4,18 +4,27 @@ import 'package:proyecto_flutter/features/history/presentation/widgets/app_baner
 import 'package:proyecto_flutter/features/history/presentation/state/history_provider.dart';
 import 'package:proyecto_flutter/features/history/presentation/widgets/card_client_trans.dart';
 
-class HistoryTransView extends StatelessWidget {
+class HistoryTransView extends StatefulWidget {
   const HistoryTransView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<HistoryTransView> createState() => _HistoryTransViewState();
+}
+
+class _HistoryTransViewState extends State<HistoryTransView> {
+  @override
+  void initState() {
+    super.initState();
     context.read<HistoryProvider>().userPerfil(
-      // 'Henry Peralta',
-      // 'henry.peralta',
       'Byron Toledo',
       'byron.toledo',
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBaner(),
       body: Column(
         children: [

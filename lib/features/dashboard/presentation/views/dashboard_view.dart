@@ -13,10 +13,10 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<DashboardProvider>().userPerfil(
-      'Henry Peralta',
-      'henry.peralta',
-      // 'Byron Toledo',
-      // 'byron.toledo',
+      // 'Henry Peralta',
+      // 'henry.peralta',
+      'Byron Toledo',
+      'byron.toledo',
     );
     return Scaffold(
       appBar: const AppBaner(),

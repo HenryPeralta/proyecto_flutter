@@ -12,11 +12,11 @@ class WrapMenu extends StatelessWidget {
       runSpacing: 20,
       alignment: WrapAlignment.start,
       children: [
-        const ButtomMenu(
+        /*const ButtomMenu(
           asset: Assets.wallet,
           label: 'Cuentas',
           route: '/account',
-        ),
+        ),*/
         const ButtomMenu(
           asset: Assets.creditCard,
           label: 'Tarjetas de Crédito',
@@ -32,11 +32,11 @@ class WrapMenu extends StatelessWidget {
           label: 'Reportes y Movimientos',
           route: '/history',
         ),
-        const ButtomMenu(
+        /*const ButtomMenu(
           asset: Assets.prestamo,
           label: 'Préstamos',
           route: '/loans',
-        ),
+        ),*/
       ],
     );
   }

@@ -6,7 +6,7 @@ class RemoteDashboardDataSource {
     final name = userModel.name;
     final email = userModel.email;
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 500));
 
     if (name.isEmpty || email.isEmpty) {
       throw Exception('Nombre y correo electrónico no pueden estar vacíos');
@@ -17,13 +17,16 @@ class RemoteDashboardDataSource {
     }
     if (name == 'Henry Peralta' && email == 'henry.peralta') {
       return userModel;
+    }
+    if (name == 'Admin' && email == 'admin@email.com') {
+      return userModel;
     } else {
       throw Exception('Error el usuario no existe');
     }
   }
 
   Future<UserAccountModel> userAccount(UserModel userModel) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 500));
 
     if (userModel.name.isEmpty || userModel.email.isEmpty) {
       throw Exception('Nombre y correo electrónico no pueden estar vacíos');
@@ -46,6 +49,16 @@ class RemoteDashboardDataSource {
         accountNumber: '5123 **** **** 5678',
         balance: 3000.00,
         moneda: 'GTQ',
+      );
+    }
+    if (userModel.name == 'Admin' &&
+        userModel.email == 'admin@email.com') {
+      return UserAccountModel(
+        name: userModel.name,
+        card: 'Visa',
+        accountNumber: '4532 **** **** 9999',
+        balance: 10000.00,
+        moneda: 'USD',
       );
     } else {
       throw Exception('Error el usuario no existe');

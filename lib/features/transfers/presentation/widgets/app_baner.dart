@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flutter/core/app_colors.dart';
 
-class AppBanerTransferencias extends StatelessWidget implements PreferredSizeWidget {
+class AppBanerTransferencias extends StatelessWidget
+    implements PreferredSizeWidget {
   const AppBanerTransferencias({super.key});
 
   @override

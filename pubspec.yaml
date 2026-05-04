@@ -10,11 +10,19 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.5+1
+  flutter_riverpod: ^2.6.1
+  dio: ^5.8.0+1
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
-  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.15
+  freezed: ^2.5.8
+  json_serializable: ^6.9.4
 
 flutter:
   uses-material-design: true
@@ -23,7 +31,7 @@ flutter:
     - assets/
 
   fonts:
-    - family: Poppins # nombre que usarás en el código
+    - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Bold.ttf

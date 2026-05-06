@@ -1,56 +1,77 @@
-import '../../domain/entities/user_entity.dart';
+import '../../domain/entities/auth_response.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../datasources/auth_remote_datasource.dart';
-import '../models/user_model.dart';
-import '../services/local_storage_service.dart';
+import '../datasources/local_auth_datasource.dart';
+import '../datasources/remote_auth_datasource.dart';
+import '../models/login_response_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
-  final LocalStorageService localStorageService;
+  final RemoteAuthDataSource remoteDataSource;
+  final LocalAuthDataSource localDataSource;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
-    required this.localStorageService,
+    required this.localDataSource,
   });
 
   @override
-  Future<UserEntity> login(
-    String username,
-    String password,
-  ) async {
-    final userModel = await remoteDataSource.login(
-      username: username,
-      password: password,
-    );
-
-    final user = userModel.toEntity();
-
-    await saveSession(user);
-
-    return user;
-  }
-
-  @override
-  Future<void> saveSession(UserEntity user) async {
-    await localStorageService.saveToken(user.token);
-  }
-
-  @override
-  Future<UserEntity?> getSession() async {
-    final token = await localStorageService.getToken();
-
-    if (token == null) return null;
-
-    return UserEntity(
-      id: 0,
-      username: '',
-      email: '',
-      token: token,
-    );
+  Future<AuthResponse> login({
+    required String username,
+    required String password,
+  }) async {
+    try {
+      final response = await remoteDataSource.login(
+        username: username,
+        password: password,
+      );
+      final authResponse = response.toEntity();
+      // Guardar la sesión localmente
+      await saveSession(authResponse);
+      return authResponse;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<void> logout() async {
-    await localStorageService.clearSession();
+    // Por ahora solo limpia. Tu compañero puede agregar lógica si es necesaria
+  }
+
+  @override
+  Future<AuthResponse?> getStoredSession() async {
+    try {
+      final sessionModel = await localDataSource.getStoredSession();
+      if (sessionModel == null) return null;
+      return sessionModel.toEntity();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> saveSession(AuthResponse response) async {
+    // Convertir AuthResponse de vuelta a Model para guardar
+    final model = _authResponseToModel(response);
+    await localDataSource.saveSession(model);
+  }
+
+  @override
+  Future<void> clearSession() async {
+    await localDataSource.clearSession();
+  }
+
+  // Helper para convertir AuthResponse a LoginResponseModel
+  LoginResponseModel _authResponseToModel(AuthResponse response) {
+    // Nota: Esto es un helper. Podrías mejorar esto en tu implementación
+    return LoginResponseModel(
+      id: response.user.id,
+      username: response.user.username,
+      email: response.user.email,
+      firstName: response.user.firstName,
+      lastName: response.user.lastName,
+      image: response.user.image,
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+    );
   }
 }

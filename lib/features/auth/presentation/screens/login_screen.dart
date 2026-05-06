@@ -1,93 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/auth_notifier.dart';
+import '../states/auth_state.dart';
 import '../widgets/login_header.dart';
 import '../widgets/login_form.dart';
 import '../widgets/login_button.dart';
-import '../../../dashboard/presentation/views/dashboard_layout.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final usernameController = TextEditingController();
+    final passwordController = TextEditingController();
 
-class _LoginScreenState extends State<LoginScreen> {
+    final authState = ref.watch(authNotifierProvider);
 
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  // Mapa de usuarios: {usuario: {nombre, email}}
-  final Map<String, Map<String, String>> users = {
-    'admin': {'name': 'Admin', 'email': 'admin@email.com'},
-    'henry': {'name': 'Henry Peralta', 'email': 'henry.peralta'},
-    'byron': {'name': 'Byron Toledo', 'email': 'byron.toledo'},
-  };
-
-  void login() {
-
-    String username = usernameController.text.trim().toLowerCase();
-    String password = passwordController.text;
-
-    if (users.containsKey(username) && password == "12345") {
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Login correcto ✅"),
-        ),
+    // Escuchar cambios y navegar cuando esté autenticado
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        authenticated: (response) {
+          print('✅ Autenticado: ${response.user.email}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('¡Login exitoso! 🎉'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          // Navegar al dashboard sin delay
+          Future.microtask(() {
+            if (context.mounted) {
+              context.go('/dashboard');
+            }
+          });
+        },
+        error: (message) {
+          print('❌ Error: $message');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $message'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        },
       );
+    });
 
-      String userName = users[username]!['name']!;
-      String userEmail = users[username]!['email']!;
+    void handleLogin() {
+      final username = usernameController.text.trim();
+      final password = passwordController.text;
 
-      /// IR AL DASHBOARD
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DashboardLayout(
-            userName: userName,
-            userEmail: userEmail,
+      if (username.isEmpty || password.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Completa todos los campos'),
+            backgroundColor: Colors.red,
           ),
-        ),
-      );
+        );
+        return;
+      }
 
-    } else {
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Usuario o contraseña incorrectos ❌"),
-        ),
-      );
-
+      ref
+          .read(authNotifierProvider.notifier)
+          .login(username: username, password: password);
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               const LoginHeader(),
-
               const SizedBox(height: 30),
-
               LoginForm(
                 usernameController: usernameController,
                 passwordController: passwordController,
               ),
-
               const SizedBox(height: 30),
-
               LoginButton(
-                onTap: login,
+                onTap: handleLogin,
+                isLoading: authState.maybeWhen(
+                  loading: () => true,
+                  orElse: () => false,
+                ),
               ),
-
               const SizedBox(height: 40),
-
             ],
           ),
         ),

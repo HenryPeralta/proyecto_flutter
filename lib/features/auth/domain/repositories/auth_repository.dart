@@ -1,14 +1,21 @@
-import '../entities/user_entity.dart';
+import '../entities/auth_response.dart';
 
 abstract class AuthRepository {
-  Future<UserEntity> login(
-    String username,
-    String password,
-  );
+  /// Login con username y password
+  Future<AuthResponse> login({
+    required String username,
+    required String password,
+  });
 
-  Future<void> saveSession(UserEntity user);
-
-  Future<UserEntity?> getSession();
-
+  /// Logout
   Future<void> logout();
+
+  /// Verificar si existe sesión activa
+  Future<AuthResponse?> getStoredSession();
+
+  /// Guardar sesión localmente
+  Future<void> saveSession(AuthResponse response);
+
+  /// Limpiar sesión
+  Future<void> clearSession();
 }

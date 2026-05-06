@@ -10,33 +10,19 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.5+1
-  
-  # State Management
-  flutter_riverpod: ^2.4.0
-  riverpod_annotation: ^2.3.0
-  
-  # Serialization & Validation
-  freezed_annotation: ^2.4.0
+  flutter_riverpod: ^2.6.1
+  dio: ^5.8.0+1
+  freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
-  formz: ^0.7.0
-  
-  # HTTP & Storage
-  dio: ^5.3.0
-  shared_preferences: ^2.2.0
-  
-  # Routing
-  go_router: ^13.0.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
-  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  
-  # Code Generation
-  build_runner: ^2.4.0
-  freezed: ^2.4.0
-  json_serializable: ^6.7.0
-  riverpod_generator: ^2.3.0
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.15
+  freezed: ^2.5.8
+  json_serializable: ^6.9.4
 
 flutter:
   uses-material-design: true
@@ -45,7 +31,7 @@ flutter:
     - assets/
 
   fonts:
-    - family: Poppins # nombre que usarás en el código
+    - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Bold.ttf

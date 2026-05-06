@@ -13,11 +13,13 @@ enum MenuItem {
 class DashboardLayout extends StatefulWidget {
   final String userName;
   final String userEmail;
+  final VoidCallback? onLogout;
 
   const DashboardLayout({
     super.key,
     required this.userName,
     required this.userEmail,
+    this.onLogout,
   });
 
   @override
@@ -167,7 +169,8 @@ class _DashboardLayoutState extends State<DashboardLayout> {
 
                     // Botón de logout
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 20),
                       child: ListTile(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -216,12 +219,15 @@ class _DashboardLayoutState extends State<DashboardLayout> {
           ),
           leading: Icon(
             icon,
-            color: isSelected ? const Color(0xFFFF6A6A) : const Color(0xFF666666),
+            color:
+                isSelected ? const Color(0xFFFF6A6A) : const Color(0xFF666666),
           ),
           title: Text(
             title,
             style: TextStyle(
-              color: isSelected ? const Color(0xFFFF6A6A) : const Color(0xFF666666),
+              color: isSelected
+                  ? const Color(0xFFFF6A6A)
+                  : const Color(0xFF666666),
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -246,7 +252,8 @@ class _DashboardLayoutState extends State<DashboardLayout> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/');
+                // Usar el callback en lugar de Navigator
+                widget.onLogout?.call();
               },
               child: const Text('Salir'),
             ),

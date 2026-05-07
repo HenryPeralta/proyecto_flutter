@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flutter/core/assets.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/menu_icon.dart';
 
 class WrapMenu extends StatelessWidget {
@@ -7,6 +8,8 @@ class WrapMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Wrap(
       spacing: 20,
       runSpacing: 20,
@@ -17,19 +20,19 @@ class WrapMenu extends StatelessWidget {
           label: 'Cuentas',
           route: '/account',
         ),*/
-        const ButtomMenu(
+        ButtomMenu(
           asset: Assets.creditCard,
-          label: 'Tarjetas de Crédito',
+          label: l10n.creditCards,
           route: '/transfers',
         ),
-        const ButtomMenu(
+        ButtomMenu(
           asset: Assets.transfer,
-          label: 'Transferencias',
+          label: l10n.transfersTitle,
           route: '/transfers',
         ),
-        const ButtomMenu(
+        ButtomMenu(
           asset: Assets.reportTrans,
-          label: 'Reportes y Movimientos',
+          label: l10n.reportsAndMovements,
           route: '/history',
         ),
         /*const ButtomMenu(

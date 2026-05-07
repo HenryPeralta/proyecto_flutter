@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 //import 'package:proyecto_flutter/features/history/presentation/widgets/app_baner.dart';
 import 'package:proyecto_flutter/features/history/presentation/state/history_provider.dart';
 import 'package:proyecto_flutter/features/history/presentation/widgets/card_client_trans.dart';
@@ -17,20 +18,20 @@ class _HistoryTransViewState extends State<HistoryTransView> {
   void initState() {
     super.initState();
     context.read<HistoryProvider>().userPerfil(
-      'Byron Toledo',
-      'byron.toledo',
-    );
+          'Byron Toledo',
+          'byron.toledo',
+        );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
-          DashboardHeader(
-            title: "Historial de Transacciones"
-          ),
+          DashboardHeader(title: l10n.transactionHistory),
           const SizedBox(height: 10),
           CardClientTrans(),
           ListView(

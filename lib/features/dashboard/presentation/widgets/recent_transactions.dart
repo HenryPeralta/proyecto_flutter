@@ -1,76 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 
 class RecentTransactions extends StatelessWidget {
   const RecentTransactions({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-
-          const Text(
-            "Últimos movimientos",
-            style: TextStyle(
+          Text(
+            l10n.recentTransactions,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 10),
-
           Card(
             elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-
             child: Column(
-              children: const [
-
+              children: [
                 ListTile(
-                  leading: Icon(Icons.shopping_cart),
-                  title: Text("Amazon"),
-                  subtitle: Text("Compra online"),
-                  trailing: Text("-GTQ 230"),
+                  leading: const Icon(Icons.shopping_cart),
+                  title: const Text("Amazon"),
+                  subtitle: Text(l10n.onlinePurchase),
+                  trailing: const Text("-GTQ 230"),
                 ),
-
-                Divider(height: 1),
-
+                const Divider(height: 1),
                 ListTile(
-                  leading: Icon(Icons.local_taxi),
-                  title: Text("Uber"),
-                  subtitle: Text("Transporte"),
-                  trailing: Text("-GTQ 45"),
+                  leading: const Icon(Icons.local_taxi),
+                  title: const Text("Uber"),
+                  subtitle: Text(l10n.transportation),
+                  trailing: const Text("-GTQ 45"),
                 ),
-
-                Divider(height: 1),
-
+                const Divider(height: 1),
                 ListTile(
-                  leading: Icon(Icons.attach_money),
-                  title: Text("Salario"),
-                  subtitle: Text("Ingreso mensual"),
-                  trailing: Text("+GTQ 3500"),
+                  leading: const Icon(Icons.attach_money),
+                  title: const Text("Salario"),
+                  subtitle: Text(l10n.monthlySalary),
+                  trailing: const Text("+GTQ 3500"),
                 ),
-
-                Divider(height: 1),
-
+                const Divider(height: 1),
                 ListTile(
-                  leading: Icon(Icons.movie),
-                  title: Text("Netflix"),
-                  subtitle: Text("Suscripción"),
-                  trailing: Text("-GTQ 85"),
+                  leading: const Icon(Icons.movie),
+                  title: const Text("Netflix"),
+                  subtitle: Text(l10n.subscription),
+                  trailing: const Text("-GTQ 85"),
                 ),
-
               ],
             ),
           ),
-
         ],
       ),
     );

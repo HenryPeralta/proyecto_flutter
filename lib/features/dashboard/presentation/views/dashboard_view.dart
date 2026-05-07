@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 // import 'package:proyecto_flutter/features/dashboard/presentation/widgets/app_baner.dart';
 // import 'package:proyecto_flutter/features/dashboard/presentation/widgets/bottom_app_baner.dart';
@@ -29,20 +30,20 @@ class _DashboardViewState extends State<DashboardView> {
     super.initState();
     // Cargar datos del usuario
     context.read<DashboardProvider>().userPerfil(
-      widget.userName,
-      widget.userEmail,
-    );
+          widget.userName,
+          widget.userEmail,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
-          DashboardHeader(
-            title: "Dashboard"
-          ),
+          DashboardHeader(title: l10n.dashboard),
           const SizedBox(height: 10),
           CardClient(),
           const SizedBox(height: 10),

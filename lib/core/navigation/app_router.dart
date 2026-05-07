@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/providers/auth_notifier.dart';
 import '../../features/dashboard/presentation/views/dashboard_layout.dart';
@@ -25,9 +26,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
-      appBar: AppBar(title: const Text('Error')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.error)),
       body: Center(
-        child: Text('Error: ${state.error}'),
+        child: Text(
+            AppLocalizations.of(context)!.errorMessage(state.error.toString())),
       ),
     ),
   );
@@ -71,7 +73,9 @@ class _DashboardSimplePage extends ConsumerWidget {
       error: (message) {
         print('❌ Dashboard Error: $message');
         return Scaffold(
-          body: Center(child: Text('Error: $message')),
+          body: Center(
+            child: Text(AppLocalizations.of(context)!.errorMessage(message)),
+          ),
         );
       },
       orElse: () {

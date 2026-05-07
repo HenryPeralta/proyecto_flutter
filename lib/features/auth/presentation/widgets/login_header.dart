@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 
 class LoginHeader extends StatelessWidget {
   const LoginHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          SizedBox(height: 60),
-
+          const SizedBox(height: 60),
           Text(
-            "Hello",
-            style: TextStyle(
+            l10n.hello,
+            style: const TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
             ),
           ),
-
-          SizedBox(height: 8),
-
+          const SizedBox(height: 8),
           Text(
-            "Sign in to your account",
-            style: TextStyle(
+            l10n.signInToAccount,
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.black54,
             ),

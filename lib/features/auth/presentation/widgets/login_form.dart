@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 
 class LoginForm extends StatefulWidget {
   final TextEditingController usernameController;
@@ -19,6 +20,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
@@ -38,11 +40,11 @@ class _LoginFormState extends State<LoginForm> {
             ),
             child: TextField(
               controller: widget.usernameController,
-              decoration: const InputDecoration(
-                hintText: "Usuario o Email",
-                prefixIcon: Icon(Icons.person_outline),
+              decoration: InputDecoration(
+                hintText: l10n.usernameOrEmail,
+                prefixIcon: const Icon(Icons.person_outline),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 18),
+                contentPadding: const EdgeInsets.symmetric(vertical: 18),
               ),
             ),
           ),
@@ -66,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
               controller: widget.passwordController,
               obscureText: !_showPassword,
               decoration: InputDecoration(
-                hintText: "Contraseña",
+                hintText: l10n.enterPassword,
                 prefixIcon: const Icon(Icons.lock_outline),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -89,7 +91,7 @@ class _LoginFormState extends State<LoginForm> {
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              "¿Olvidaste tu contraseña?",
+              l10n.forgotPassword,
               style: TextStyle(color: Colors.grey[500], fontSize: 13),
             ),
           ),

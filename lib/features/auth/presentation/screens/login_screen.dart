@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import '../providers/auth_notifier.dart';
 import '../states/auth_state.dart';
 import '../widgets/login_header.dart';
@@ -12,6 +13,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
 
@@ -23,8 +25,8 @@ class LoginScreen extends ConsumerWidget {
         authenticated: (response) {
           print('✅ Autenticado: ${response.user.email}');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('¡Login exitoso! 🎉'),
+            SnackBar(
+              content: Text(l10n.loginSuccess),
               backgroundColor: Colors.green,
             ),
           );
@@ -39,7 +41,7 @@ class LoginScreen extends ConsumerWidget {
           print('❌ Error: $message');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error: $message'),
+              content: Text(l10n.errorMessage(message)),
               backgroundColor: Colors.red,
             ),
           );
@@ -53,8 +55,8 @@ class LoginScreen extends ConsumerWidget {
 
       if (username.isEmpty || password.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Completa todos los campos'),
+          SnackBar(
+            content: Text(l10n.completeAllFields),
             backgroundColor: Colors.red,
           ),
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import 'dashboard_view.dart';
 import '../../../history/presentation/views/history_trans_view.dart';
 import '../../../transfers/presentation/views/transfers_view.dart';
@@ -54,6 +55,8 @@ class _DashboardLayoutState extends State<DashboardLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -136,32 +139,36 @@ class _DashboardLayoutState extends State<DashboardLayout> {
 
                     // Botones de navegación
                     _buildSidebarButton(
+                      context: context,
                       icon: Icons.dashboard_outlined,
-                      title: "Dashboard",
+                      title: l10n.dashboard,
                       page: MenuItem.dashboard,
                     ),
 
                     const SizedBox(height: 5),
 
                     _buildSidebarButton(
+                      context: context,
                       icon: Icons.swap_horiz,
-                      title: "Transferencias",
+                      title: l10n.transfersTitle,
                       page: MenuItem.transfer,
                     ),
 
                     const SizedBox(height: 5),
 
                     _buildSidebarButton(
+                      context: context,
                       icon: Icons.history,
-                      title: "Historial",
+                      title: l10n.transactionHistory,
                       page: MenuItem.history,
                     ),
 
                     const SizedBox(height: 5),
 
                     _buildSidebarButton(
+                      context: context,
                       icon: Icons.settings_outlined,
-                      title: "Configuración",
+                      title: l10n.configuration,
                       page: MenuItem.settings,
                     ),
 
@@ -179,9 +186,9 @@ class _DashboardLayoutState extends State<DashboardLayout> {
                           Icons.logout,
                           color: Color(0xFF666666),
                         ),
-                        title: const Text(
-                          "Cerrar Sesión",
-                          style: TextStyle(color: Color(0xFF666666)),
+                        title: Text(
+                          l10n.logout,
+                          style: const TextStyle(color: Color(0xFF666666)),
                         ),
                         onTap: _handleLogout,
                       ),
@@ -198,6 +205,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
   }
 
   Widget _buildSidebarButton({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required MenuItem page,
@@ -238,16 +246,18 @@ class _DashboardLayoutState extends State<DashboardLayout> {
   }
 
   void _handleLogout() {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Cerrar sesión'),
-          content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
+          title: Text(l10n.logoutTitle),
+          content: Text(l10n.areYouSure),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -255,7 +265,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
                 // Usar el callback en lugar de Navigator
                 widget.onLogout?.call();
               },
-              child: const Text('Salir'),
+              child: Text(l10n.exit),
             ),
           ],
         );

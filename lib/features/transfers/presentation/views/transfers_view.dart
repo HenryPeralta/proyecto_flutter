@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/dashboard_header.dart';
 import 'package:proyecto_flutter/features/transfers/presentation/widgets/add_account.dart';
 import 'package:proyecto_flutter/features/transfers/presentation/widgets/drop_account_destination.dart';
@@ -10,19 +11,19 @@ class Transfers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       // appBar: const AppBanerTransferencias(),
       body: ListView(
         children: [
-          DashboardHeader(title: "Transferencias"),
+          DashboardHeader(title: l10n.transfersTitle),
           const SizedBox(height: 20),
           DropAccountTransfer(),
-
           const SizedBox(height: 20),
-
           ListTile(
             title: Text(
-              'Tipo de transferencia',
+              l10n.transferType,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -30,13 +31,11 @@ class Transfers extends StatelessWidget {
               ),
             ),
           ),
-
           MenuTransfer(),
           const SizedBox(height: 20),
-
           ListTile(
             title: Text(
-              'Cuenta Destino',
+              l10n.destinationAccount,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -44,40 +43,33 @@ class Transfers extends StatelessWidget {
               ),
             ),
           ),
-
           DropAccountDestination(),
-
           const SizedBox(height: 10),
-
           ListTile(leading: AddAccount()),
-
           const SizedBox(height: 20),
-
           Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 25),
             child: TextFormField(
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Monto a Transferir',
-                border: OutlineInputBorder(
+              decoration: InputDecoration(
+                labelText: l10n.amountToTransfer,
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
               ),
             ),
           ),
-
           Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 25, vertical: 30),
             child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Descripcion',
-                border: OutlineInputBorder(
+              decoration: InputDecoration(
+                labelText: l10n.description,
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
               ),
             ),
           ),
-
           Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 25),
             child: ElevatedButton.icon(
@@ -98,14 +90,14 @@ class Transfers extends StatelessWidget {
                             backgroundColor: Colors.green,
                             child: Icon(Icons.check, color: Colors.white),
                           ),
-                          ListTile(title: Text('Transferencia Exitosa!')),
+                          ListTile(title: Text(l10n.transferSuccess)),
                         ],
                       ),
                     ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Aceptar'),
+                        child: Text(l10n.accept),
                       ),
                     ],
                   ),
@@ -113,9 +105,9 @@ class Transfers extends StatelessWidget {
                 // Acción al presionar el botón
               },
               icon: const Icon(Icons.check, color: Colors.white),
-              label: const Text(
-                'Confirmar',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+              label: Text(
+                l10n.confirm,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
           ),

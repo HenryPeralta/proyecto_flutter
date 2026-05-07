@@ -1,26 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'features/auth/presentation/screens/login_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart' as legacy_provider;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'core/navigation/app_router.dart';
+import 'features/auth/presentation/providers/auth_providers.dart';
 import 'features/dashboard/presentation/state/dashboard_provider.dart';
 import 'features/history/presentation/state/history_provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return legacy_provider.MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DashboardProvider()),
-        ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        legacy_provider.ChangeNotifierProvider(
+            create: (_) => DashboardProvider()),
+        legacy_provider.ChangeNotifierProvider(
+            create: (_) => HistoryProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        home: LoginScreen(),
+        routerConfig: router,
       ),
     );
   }

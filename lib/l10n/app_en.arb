@@ -57,5 +57,18 @@
   "hello": "Hello",
   "signInToAccount": "Sign in to your account",
   "signIn": "Sign in",
-  "loggingIn": "Logging in..."
+  "loggingIn": "Logging in...",
+  "language": "Language",
+  "selectLanguage": "Choose the language you want to use in the app.",
+  "spanish": "Spanish",
+  "english": "English",
+  "myProducts": "My products",
+  "retry": "Retry",
+  "dashboardLoadErrorTitle": "We couldn't load your products right now.",
+  "dashboardLoadErrorSubtitle": "Please try again in a few seconds.",
+  "dashboardCacheNotice": "We couldn't update your products. Showing saved information.",
+  "primaryCardProduct": "Primary card",
+  "checkingAccountProduct": "Checking account",
+  "savingsAccountProduct": "Savings account",
+  "personalLoanProduct": "Personal loan"
 }

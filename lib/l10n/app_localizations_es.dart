@@ -186,4 +186,46 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get loggingIn => 'Ingresando...';
+
+  @override
+  String get language => 'Idioma';
+
+  @override
+  String get selectLanguage => 'Elige el idioma que quieres usar en la app.';
+
+  @override
+  String get spanish => 'Español';
+
+  @override
+  String get english => 'Inglés';
+
+  @override
+  String get myProducts => 'Mis productos';
+
+  @override
+  String get retry => 'Reintentar';
+
+  @override
+  String get dashboardLoadErrorTitle =>
+      'No pudimos cargar tus productos en este momento.';
+
+  @override
+  String get dashboardLoadErrorSubtitle =>
+      'Intenta nuevamente en unos segundos.';
+
+  @override
+  String get dashboardCacheNotice =>
+      'No pudimos actualizar tus productos. Te mostramos la información guardada.';
+
+  @override
+  String get primaryCardProduct => 'Tarjeta principal';
+
+  @override
+  String get checkingAccountProduct => 'Cuenta monetaria';
+
+  @override
+  String get savingsAccountProduct => 'Cuenta de ahorro';
+
+  @override
+  String get personalLoanProduct => 'Préstamo personal';
 }

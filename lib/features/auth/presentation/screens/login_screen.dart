@@ -7,6 +7,7 @@ import '../states/auth_state.dart';
 import '../widgets/login_header.dart';
 import '../widgets/login_form.dart';
 import '../widgets/login_button.dart';
+import '../widgets/login_language_selector.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -74,6 +75,7 @@ class LoginScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const LoginLanguageSelector(),
               const LoginHeader(),
               const SizedBox(height: 30),
               LoginForm(

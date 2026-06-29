@@ -16,4 +16,8 @@ class DashboardUseCase {
   Future<UserAccount> callAccount(String name, String email) async {
     return await _dashboardRepository.userAccount(name, email);
   }
+
+  Future<List<UserAccount>> callAccounts(String name, String email) async {
+    return await _dashboardRepository.userAccounts(name, email);
+  }
 }

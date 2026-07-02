@@ -451,6 +451,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logging in...'**
   String get loggingIn;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the language you want to use in the app.'**
+  String get selectLanguage;
+
+  /// No description provided for @spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get spanish;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @myProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'My products'**
+  String get myProducts;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @dashboardLoadErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load your products right now.'**
+  String get dashboardLoadErrorTitle;
+
+  /// No description provided for @dashboardLoadErrorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again in a few seconds.'**
+  String get dashboardLoadErrorSubtitle;
+
+  /// No description provided for @dashboardCacheNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t update your products. Showing saved information.'**
+  String get dashboardCacheNotice;
+
+  /// No description provided for @primaryCardProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary card'**
+  String get primaryCardProduct;
+
+  /// No description provided for @checkingAccountProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking account'**
+  String get checkingAccountProduct;
+
+  /// No description provided for @savingsAccountProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings account'**
+  String get savingsAccountProduct;
+
+  /// No description provided for @personalLoanProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal loan'**
+  String get personalLoanProduct;
 }
 
 class _AppLocalizationsDelegate

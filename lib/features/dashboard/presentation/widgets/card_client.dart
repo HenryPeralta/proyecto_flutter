@@ -8,75 +8,77 @@ class CardClient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nameTitle = context.watch<DashboardProvider>().nameTitle;
-    final cardTitle = context.watch<DashboardProvider>().cardTitle;
-    final accountNumberTitle = context
-        .watch<DashboardProvider>()
-        .accountNumberTitle;
-    final balanceTitle = context.watch<DashboardProvider>().balanceTitle;
-    final monedaTitle = context.watch<DashboardProvider>().monedaTitle;
-    return Stack(
-      alignment: Alignment.topLeft,
-      children: [
-        Image.asset(
-          cardTitle == 'Visa' ? Assets.cardVisa : Assets.cardMastercard,
-          height: 321,
-          width: 527,
-          fit: BoxFit.cover,
-        ),
-        Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // const SizedBox(height: 40),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    nameTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontFamily: 'Poppins',
-                      // fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  Text(
-                    cardTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    accountNumberTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    '$monedaTitle $balanceTitle',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+    final dashboard = context.watch<DashboardProvider>();
+    final width = MediaQuery.sizeOf(context).width;
+    final cardWidth = (width - 32).clamp(280.0, 527.0).toDouble();
+
+    return Center(
+      child: SizedBox(
+        width: cardWidth,
+        child: AspectRatio(
+          aspectRatio: 527 / 321,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                dashboard.cardTitle == 'Visa'
+                    ? Assets.cardVisa
+                    : Assets.cardMastercard,
+                fit: BoxFit.cover,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 36,
+                  vertical: 30,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dashboard.nameTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      dashboard.cardTitle,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      dashboard.accountNumberTitle,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '${dashboard.monedaTitle} ${dashboard.balanceTitle}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as legacy_provider;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'core/locale_provider.dart';
 import 'core/navigation/app_router.dart';
 import 'features/auth/presentation/providers/auth_providers.dart';
 import 'features/dashboard/presentation/state/dashboard_provider.dart';
@@ -17,13 +18,18 @@ void main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
-      child: const MyApp(),
+      child: MyApp(sharedPreferences: sharedPreferences),
     ),
   );
 }
 
 class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+  final SharedPreferences sharedPreferences;
+
+  const MyApp({
+    super.key,
+    required this.sharedPreferences,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,23 +38,29 @@ class MyApp extends ConsumerWidget {
     return legacy_provider.MultiProvider(
       providers: [
         legacy_provider.ChangeNotifierProvider(
-            create: (_) => DashboardProvider()),
+          create: (_) => DashboardProvider(sharedPreferences: sharedPreferences),
+        ),
         legacy_provider.ChangeNotifierProvider(
             create: (_) => HistoryProvider()),
+        legacy_provider.ChangeNotifierProvider(
+          create: (_) => LocaleProvider(sharedPreferences),
+        ),
       ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en'), // English
-          Locale('es'), // Spanish
-        ],
+      child: legacy_provider.Consumer<LocaleProvider>(
+        builder: (context, localeProvider, _) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routerConfig: router,
+            locale: localeProvider.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+          );
+        },
       ),
     );
   }

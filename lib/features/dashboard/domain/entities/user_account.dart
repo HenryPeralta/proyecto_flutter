@@ -1,23 +1,25 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:proyecto_flutter/features/dashboard/data/models/user_account_model.dart';
 
-class UserAccount {
-  final String name;
-  final String card;
-  final String accountNumber;
-  final double balance;
-  final String moneda;
+part 'user_account.freezed.dart';
 
-  UserAccount({
-    required this.name,
-    required this.card,
-    required this.accountNumber,
-    required this.balance,
-    required this.moneda,
-  });
+@freezed
+class UserAccount with _$UserAccount {
+  const UserAccount._();
+
+  const factory UserAccount({
+    required String name,
+    required String productType,
+    required String card,
+    required String accountNumber,
+    required double balance,
+    required String moneda,
+  }) = _UserAccount;
 
   factory UserAccount.fromModel(UserAccountModel userAccountModel) {
     return UserAccount(
       name: userAccountModel.name,
+      productType: userAccountModel.productType,
       card: userAccountModel.card,
       accountNumber: userAccountModel.accountNumber,
       balance: userAccountModel.balance,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
 import 'dashboard_view.dart';
+import 'settings_view.dart';
 import '../../../history/presentation/views/history_trans_view.dart';
 import '../../../transfers/presentation/views/transfers_view.dart';
 
@@ -43,6 +44,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
       ),
       MenuItem.history: const HistoryTransView(),
       MenuItem.transfer: const Transfers(),
+      MenuItem.settings: const SettingsView(),
     };
   }
 

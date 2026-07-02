@@ -4,4 +4,5 @@ import 'package:proyecto_flutter/features/dashboard/domain/entities/user_account
 abstract class DashboardRepository {
   Future<User> userPerfil(String name, String email);
   Future<UserAccount> userAccount(String name, String email);
+  Future<List<UserAccount>> userAccounts(String name, String email);
 }

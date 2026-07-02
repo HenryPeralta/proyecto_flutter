@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/core/locale_provider.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/dashboard_header.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
 
-class SettingsView extends StatelessWidget {
+class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final localeProvider = context.watch<LocaleProvider>();
-    final selectedLanguage = localeProvider.locale.languageCode;
+    final selectedLanguage = ref.watch(localeProvider).languageCode;
+    final localeNotifier = ref.read(localeProvider.notifier);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -41,20 +41,20 @@ class SettingsView extends StatelessWidget {
                 _LanguageOption(
                   title: l10n.spanish,
                   subtitle: 'ES',
-                  value: LocaleProvider.spanish.languageCode,
+                  value: LocaleNotifier.spanish.languageCode,
                   groupValue: selectedLanguage,
                   onChanged: (_) {
-                    localeProvider.setLocale(LocaleProvider.spanish);
+                    localeNotifier.setLocale(LocaleNotifier.spanish);
                   },
                 ),
                 const SizedBox(height: 8),
                 _LanguageOption(
                   title: l10n.english,
                   subtitle: 'EN',
-                  value: LocaleProvider.english.languageCode,
+                  value: LocaleNotifier.english.languageCode,
                   groupValue: selectedLanguage,
                   onChanged: (_) {
-                    localeProvider.setLocale(LocaleProvider.english);
+                    localeNotifier.setLocale(LocaleNotifier.english);
                   },
                 ),
               ],

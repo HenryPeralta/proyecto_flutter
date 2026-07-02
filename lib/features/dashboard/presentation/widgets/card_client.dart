@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/core/assets.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 
-class CardClient extends StatelessWidget {
+class CardClient extends ConsumerWidget {
   const CardClient({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final dashboard = context.watch<DashboardProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dashboard = ref.watch(dashboardProvider);
     final width = MediaQuery.sizeOf(context).width;
     final cardWidth = (width - 32).clamp(280.0, 527.0).toDouble();
 

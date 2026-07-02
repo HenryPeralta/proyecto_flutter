@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:proyecto_flutter/features/transfers/presentation/state/transfers_provider.dart';
 
-class DropAccountTransfer extends StatelessWidget {
+class DropAccountTransfer extends ConsumerWidget {
   const DropAccountTransfer({super.key});
 
-  List<DropdownMenuEntry<String>> get dropdownMenuEntries => [
-    const DropdownMenuEntry(value: '35278485', label: 'Num. Cuenta: 35278485'),
-    const DropdownMenuEntry(value: '84739201', label: 'Num. Cuenta: 84739201'),
-    const DropdownMenuEntry(
-      value: 'Visa: 4782 4567 7896 3456',
-      label: 'Visa: **** **** **** 3456',
-    ),
-    const DropdownMenuEntry(
-      value: '4896 1234 8745 0012',
-      label: 'Visa:  **** **** **** 0012',
-    ),
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(transfersProvider);
+    final List<DropdownMenuEntry<String>> dropdownMenuEntries = state
+        .sourceAccounts
+        .map(
+          (account) => DropdownMenuEntry(
+            value: account.value,
+            label: account.label,
+          ),
+        )
+        .toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Center(
-          child: DropdownMenu(
+          child: DropdownMenu<String>(
             width: 500,
             label: const Text('Selecciona una cuenta'),
             dropdownMenuEntries: dropdownMenuEntries,
+            onSelected: (value) => ref
+                .read(transfersProvider.notifier)
+                .selectSourceAccount(value),
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20)),

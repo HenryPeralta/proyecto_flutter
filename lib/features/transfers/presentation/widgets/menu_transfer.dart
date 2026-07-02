@@ -1,30 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/core/app_colors.dart';
+import 'package:proyecto_flutter/features/transfers/presentation/state/transfers_provider.dart';
 
-class MenuTransfer extends StatefulWidget {
+class MenuTransfer extends ConsumerWidget {
   const MenuTransfer({super.key});
 
   @override
-  State<MenuTransfer> createState() => _MenuTransferState();
-}
-
-class _MenuTransferState extends State<MenuTransfer> {
-  String? _selectedLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final options = [
-      _TransferOption(label: 'A mis cuentas', icon: Icons.account_balance),
-      _TransferOption(
-        label: 'A otros bancos',
-        icon: Icons.account_balance_outlined,
-      ),
-      _TransferOption(label: 'A tarjetas', icon: Icons.credit_card),
-      _TransferOption(
-        label: 'A otros usuarios',
-        icon: Icons.people_alt_outlined,
-      ),
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(transfersProvider);
+    final selectedLabel = state.selectedTransferType;
+    final options = state.transferTypes
+        .map((type) => _TransferOption(label: type, icon: _iconForType(type)))
+        .toList();
 
     return Wrap(
       alignment: WrapAlignment.center,
@@ -35,16 +23,23 @@ class _MenuTransferState extends State<MenuTransfer> {
             (option) => ButtonIconTransfer(
               label: option.label,
               icon: option.icon,
-              selected: option.label == _selectedLabel,
+              selected: option.label == selectedLabel,
               onPressed: () {
-                setState(() {
-                  _selectedLabel = option.label;
-                });
+                ref
+                    .read(transfersProvider.notifier)
+                    .selectTransferType(option.label);
               },
             ),
           )
           .toList(),
     );
+  }
+
+  IconData _iconForType(String type) {
+    if (type == 'A mis cuentas') return Icons.account_balance;
+    if (type == 'A otros bancos') return Icons.account_balance_outlined;
+    if (type == 'A tarjetas') return Icons.credit_card;
+    return Icons.people_alt_outlined;
   }
 }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/features/dashboard/domain/entities/user_account.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/card_client.dart';
@@ -7,7 +7,7 @@ import 'package:proyecto_flutter/features/dashboard/presentation/widgets/dashboa
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/recent_transactions.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
 
-class DashboardView extends StatefulWidget {
+class DashboardView extends ConsumerStatefulWidget {
   final String userName;
   final String userEmail;
 
@@ -18,15 +18,15 @@ class DashboardView extends StatefulWidget {
   });
 
   @override
-  State<DashboardView> createState() => _DashboardViewState();
+  ConsumerState<DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<DashboardView> {
+class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DashboardProvider>().userPerfil(
+      ref.read(dashboardProvider.notifier).userPerfil(
             widget.userName,
             widget.userEmail,
           );
@@ -36,25 +36,22 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final dashboard = ref.watch(dashboardProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Consumer<DashboardProvider>(
-        builder: (context, dashboard, _) {
-          return Column(
-            children: [
-              DashboardHeader(title: l10n.dashboard),
-              Expanded(
-                child: _buildContent(context, dashboard),
-              ),
-            ],
-          );
-        },
+      body: Column(
+        children: [
+          DashboardHeader(title: l10n.dashboard),
+          Expanded(
+            child: _buildContent(context, dashboard),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, DashboardProvider dashboard) {
+  Widget _buildContent(BuildContext context, DashboardState dashboard) {
     if (dashboard.products.isEmpty && dashboard.errorMessage == null) {
       return const Center(
         child: CircularProgressIndicator(
@@ -65,13 +62,17 @@ class _DashboardViewState extends State<DashboardView> {
 
     if (dashboard.errorMessage != null && dashboard.products.isEmpty) {
       return _DashboardError(
-        onRetry: () => dashboard.userPerfil(widget.userName, widget.userEmail),
+        onRetry: () => ref
+            .read(dashboardProvider.notifier)
+            .userPerfil(widget.userName, widget.userEmail),
       );
     }
 
     return RefreshIndicator(
       color: const Color(0xFFFF6A6A),
-      onRefresh: () => dashboard.userPerfil(widget.userName, widget.userEmail),
+      onRefresh: () => ref
+          .read(dashboardProvider.notifier)
+          .userPerfil(widget.userName, widget.userEmail),
       child: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [

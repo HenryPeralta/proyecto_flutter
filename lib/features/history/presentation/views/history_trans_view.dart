@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
 //import 'package:proyecto_flutter/features/history/presentation/widgets/app_baner.dart';
 import 'package:proyecto_flutter/features/history/presentation/state/history_provider.dart';
 import 'package:proyecto_flutter/features/history/presentation/widgets/card_client_trans.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/widgets/dashboard_header.dart';
 
-class HistoryTransView extends StatefulWidget {
+class HistoryTransView extends ConsumerStatefulWidget {
   const HistoryTransView({super.key});
 
   @override
-  State<HistoryTransView> createState() => _HistoryTransViewState();
+  ConsumerState<HistoryTransView> createState() => _HistoryTransViewState();
 }
 
-class _HistoryTransViewState extends State<HistoryTransView> {
+class _HistoryTransViewState extends ConsumerState<HistoryTransView> {
   @override
   void initState() {
     super.initState();
-    context.read<HistoryProvider>().userPerfil(
+    ref.read(historyProvider.notifier).userPerfil(
           'Byron Toledo',
           'byron.toledo',
         );

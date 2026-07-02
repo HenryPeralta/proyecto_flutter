@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/core/app_colors.dart';
 import 'package:proyecto_flutter/core/assets.dart';
 import 'package:proyecto_flutter/features/dashboard/presentation/state/dashboard_provider.dart';
 
-class AppBaner extends StatelessWidget implements PreferredSizeWidget {
+class AppBaner extends ConsumerWidget implements PreferredSizeWidget {
   const AppBaner({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final nameTitle = context.watch<DashboardProvider>().nameTitle;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final nameTitle = ref.watch(
+      dashboardProvider.select((state) => state.nameTitle),
+    );
     return AppBar(
       backgroundColor: AppColors.primary,
       toolbarHeight: 80,

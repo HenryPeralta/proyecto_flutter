@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/core/locale_provider.dart';
 
-class LoginLanguageSelector extends StatelessWidget {
+class LoginLanguageSelector extends ConsumerWidget {
   const LoginLanguageSelector({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final localeProvider = context.watch<LocaleProvider>();
-    final selectedLanguage = localeProvider.locale.languageCode;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedLanguage = ref.watch(localeProvider).languageCode;
+    final localeNotifier = ref.read(localeProvider.notifier);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 16, 30, 0),
@@ -33,14 +33,14 @@ class LoginLanguageSelector extends StatelessWidget {
               _LanguageButton(
                 label: 'ES',
                 isSelected:
-                    selectedLanguage == LocaleProvider.spanish.languageCode,
-                onTap: () => localeProvider.setLocale(LocaleProvider.spanish),
+                    selectedLanguage == LocaleNotifier.spanish.languageCode,
+                onTap: () => localeNotifier.setLocale(LocaleNotifier.spanish),
               ),
               _LanguageButton(
                 label: 'EN',
                 isSelected:
-                    selectedLanguage == LocaleProvider.english.languageCode,
-                onTap: () => localeProvider.setLocale(LocaleProvider.english),
+                    selectedLanguage == LocaleNotifier.english.languageCode,
+                onTap: () => localeNotifier.setLocale(LocaleNotifier.english),
               ),
             ],
           ),

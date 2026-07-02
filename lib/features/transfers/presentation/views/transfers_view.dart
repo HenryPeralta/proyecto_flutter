@@ -19,7 +19,7 @@ class Transfers extends StatelessWidget {
         children: [
           DashboardHeader(title: l10n.transfersTitle),
           const SizedBox(height: 20),
-          DropAccountTransfer(),
+          const DropAccountTransfer(),
           const SizedBox(height: 20),
           ListTile(
             title: Text(
@@ -31,7 +31,7 @@ class Transfers extends StatelessWidget {
               ),
             ),
           ),
-          MenuTransfer(),
+          const MenuTransfer(),
           const SizedBox(height: 20),
           ListTile(
             title: Text(
@@ -43,12 +43,12 @@ class Transfers extends StatelessWidget {
               ),
             ),
           ),
-          DropAccountDestination(),
+          const DropAccountDestination(),
           const SizedBox(height: 10),
-          ListTile(leading: AddAccount()),
+          const ListTile(leading: AddAccount()),
           const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25),
             child: TextFormField(
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
@@ -60,7 +60,7 @@ class Transfers extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 25, vertical: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: l10n.description,
@@ -71,11 +71,12 @@ class Transfers extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25),
             child: ElevatedButton.icon(
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-                minimumSize: WidgetStateProperty.all<Size>(Size(150, 60)),
+                minimumSize:
+                    WidgetStateProperty.all<Size>(const Size(150, 60)),
               ),
               onPressed: () {
                 showDialog(
@@ -86,7 +87,7 @@ class Transfers extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CircleAvatar(
+                          const CircleAvatar(
                             backgroundColor: Colors.green,
                             child: Icon(Icons.check, color: Colors.white),
                           ),

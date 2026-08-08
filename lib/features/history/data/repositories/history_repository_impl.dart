@@ -11,7 +11,7 @@ class HistoryRepositoryImpl extends HistoryRepository {
   HistoryRepositoryImpl({
     RemoteHistoryDataSource? remoteHistoryDataSource,
   }) : _remoteHistoryDataSource =
-           remoteHistoryDataSource ?? RemoteHistoryDataSource();
+            remoteHistoryDataSource ?? RemoteHistoryDataSource();
 
   @override
   Future<User> userPerfil(String name, String email) async {
@@ -26,10 +26,10 @@ class HistoryRepositoryImpl extends HistoryRepository {
 
   @override
   Future<UserAccount> userAccount(String name, String email) async {
-
     final userNameModel = UserModel(name: name, email: email);
 
-    final UserAccountModel userModelAccount = await _remoteHistoryDataSource.userAccount(userNameModel);
+    final UserAccountModel userModelAccount =
+        await _remoteHistoryDataSource.userAccount(userNameModel);
     return UserAccount.fromModel(userModelAccount);
   }
 }

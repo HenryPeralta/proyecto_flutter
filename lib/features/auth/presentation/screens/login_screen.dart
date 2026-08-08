@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
+import '../../../../core/notifications/notification_navigation.dart';
 import '../providers/auth_notifier.dart';
 import '../states/auth_state.dart';
 import '../widgets/login_header.dart';
@@ -24,7 +25,6 @@ class LoginScreen extends ConsumerWidget {
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       next.whenOrNull(
         authenticated: (response) {
-          print('✅ Autenticado: ${response.user.email}');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(l10n.loginSuccess),
@@ -34,12 +34,14 @@ class LoginScreen extends ConsumerWidget {
           // Navegar al dashboard sin delay
           Future.microtask(() {
             if (context.mounted) {
-              context.go('/dashboard');
+              context.go(
+                NotificationNavigation.consumePendingDestination() ??
+                    '/dashboard',
+              );
             }
           });
         },
         error: (message) {
-          print('❌ Error: $message');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(l10n.errorMessage(message)),

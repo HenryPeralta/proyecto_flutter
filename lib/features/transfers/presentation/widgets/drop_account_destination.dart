@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:proyecto_flutter/features/transfers/presentation/state/transfers_provider.dart';
+import 'package:proyecto_flutter/features/transfers/transfers_dependencies.dart';
 
 class DropAccountDestination extends ConsumerWidget {
   const DropAccountDestination({super.key});
@@ -8,15 +8,15 @@ class DropAccountDestination extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(transfersProvider);
-    final List<DropdownMenuEntry<String>> dropdownMenuEntries = state
-        .destinationAccounts
-        .map(
-          (account) => DropdownMenuEntry(
-            value: account.value,
-            label: account.label,
-          ),
-        )
-        .toList();
+    final List<DropdownMenuEntry<String>> dropdownMenuEntries =
+        state.destinationAccounts
+            .map(
+              (account) => DropdownMenuEntry(
+                value: account.value,
+                label: account.label,
+              ),
+            )
+            .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

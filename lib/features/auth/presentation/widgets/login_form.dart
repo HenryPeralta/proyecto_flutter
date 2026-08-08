@@ -40,6 +40,7 @@ class _LoginFormState extends State<LoginForm> {
             ),
             child: TextField(
               controller: widget.usernameController,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 hintText: l10n.usernameOrEmail,
                 prefixIcon: const Icon(Icons.person_outline),

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/notifications/notification_service.dart';
 import '../states/auth_state.dart';
 import 'auth_providers.dart';
 
@@ -20,6 +21,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
         username: username,
         password: password,
       );
+      try {
+        await NotificationService().registerCurrentDevice();
+      } catch (_) {
+        // Un fallo de notificaciones no debe invalidar un login correcto.
+      }
       state = AuthState.authenticated(response);
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -28,6 +34,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> logout() async {
     try {
+      try {
+        await NotificationService().unregisterCurrentDevice();
+      } catch (_) {
+        // El cierre de sesión debe continuar aunque FCM no esté disponible.
+      }
       final logoutUseCase = ref.read(logoutUseCaseProvider);
       await logoutUseCase.call();
       state = const AuthState.unauthenticated();

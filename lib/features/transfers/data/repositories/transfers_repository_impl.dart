@@ -1,12 +1,16 @@
 import 'package:proyecto_flutter/features/transfers/data/data_sources/local_transfers_data_source.dart';
 import 'package:proyecto_flutter/features/transfers/domain/entities/transfer_account.dart';
 import 'package:proyecto_flutter/features/transfers/domain/repositories/transfers_repository.dart';
+import '../../domain/entities/transfer_request.dart';
+import '../data_sources/remote_transfers_data_source.dart';
 
 class TransfersRepositoryImpl implements TransfersRepository {
   final LocalTransfersDataSource localTransfersDataSource;
+  final RemoteTransfersDataSource remoteTransfersDataSource;
 
   const TransfersRepositoryImpl({
     required this.localTransfersDataSource,
+    required this.remoteTransfersDataSource,
   });
 
   @override
@@ -22,5 +26,10 @@ class TransfersRepositoryImpl implements TransfersRepository {
   @override
   List<String> getTransferTypes() {
     return localTransfersDataSource.getTransferTypes();
+  }
+
+  @override
+  Future<String> createTransfer(TransferRequest request) {
+    return remoteTransfersDataSource.createTransfer(request);
   }
 }

@@ -1,4 +1,6 @@
-import 'package:dio/dio.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../models/login_response_model.dart';
 
 abstract class RemoteAuthDataSource {
@@ -9,9 +11,13 @@ abstract class RemoteAuthDataSource {
 }
 
 class RemoteAuthDataSourceImpl implements RemoteAuthDataSource {
-  final Dio dio;
+  RemoteAuthDataSourceImpl({
+    required this.firebaseAuth,
+    required this.firestore,
+  });
 
-  RemoteAuthDataSourceImpl(this.dio);
+  final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firestore;
 
   @override
   Future<LoginResponseModel> login({
@@ -19,25 +25,67 @@ class RemoteAuthDataSourceImpl implements RemoteAuthDataSource {
     required String password,
   }) async {
     try {
-      final response = await dio.post(
-        'https://dummyjson.com/auth/login',
-        data: {'username': username, 'password': password},
+      final credential = await firebaseAuth.signInWithEmailAndPassword(
+        email: username.trim(),
+        password: password,
       );
-
-      return LoginResponseModel.fromJson(response.data);
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        throw Exception('Usuario o contraseña incorrectos');
-      } else if (e.response?.statusCode == 401) {
-        throw Exception('No autorizado');
-      } else if (e.type == DioExceptionType.connectionTimeout) {
-        throw Exception('Conexión perdida. Verifica tu internet');
-      } else if (e.type == DioExceptionType.receiveTimeout) {
-        throw Exception('La solicitud tardó demasiado');
-      }
-      throw Exception('Error en login: ${e.message}');
-    } catch (e) {
-      throw Exception('Error inesperado: $e');
+      return await _toModel(credential.user!);
+    } on FirebaseAuthException catch (error) {
+      throw Exception(_messageFor(error.code));
     }
   }
+
+  Future<LoginResponseModel?> currentSession() async {
+    final user = firebaseAuth.currentUser;
+    return user == null ? null : _toModel(user);
+  }
+
+  Future<void> logout() => firebaseAuth.signOut();
+
+  Future<LoginResponseModel> _toModel(User user) async {
+    final displayName = (user.displayName ?? '').trim();
+    final names =
+        displayName.isEmpty ? <String>[] : displayName.split(RegExp(r'\s+'));
+    Map<String, dynamic> profile = const {};
+    try {
+      profile =
+          (await firestore.collection('users').doc(user.uid).get()).data() ??
+              const {};
+    } on FirebaseException {
+      // El perfil es complementario; Auth sigue siendo la fuente de la sesión.
+    }
+
+    final email = user.email ?? '';
+    final emailAlias = email.contains('@') ? email.split('@').first : email;
+    final firstName = (profile['firstName'] as String?)?.trim();
+    final lastName = (profile['lastName'] as String?)?.trim();
+    return LoginResponseModel(
+      id: user.uid.hashCode,
+      username: (profile['username'] as String?)?.trim().isNotEmpty == true
+          ? (profile['username'] as String).trim()
+          : emailAlias,
+      email: email,
+      firstName: firstName?.isNotEmpty == true
+          ? firstName!
+          : (names.isNotEmpty ? names.first : emailAlias),
+      lastName: lastName?.isNotEmpty == true
+          ? lastName!
+          : (names.length > 1 ? names.sublist(1).join(' ') : ''),
+      image: (profile['photoUrl'] as String?) ?? user.photoURL,
+      accessToken: '',
+      refreshToken: '',
+    );
+  }
+
+  String _messageFor(String code) => switch (code) {
+        'invalid-email' => 'El correo electrónico no es válido',
+        'invalid-credential' ||
+        'user-not-found' ||
+        'wrong-password' =>
+          'Correo o contraseña incorrectos',
+        'user-disabled' => 'Esta cuenta está deshabilitada',
+        'too-many-requests' => 'Demasiados intentos. Intenta más tarde',
+        'network-request-failed' => 'Verifica tu conexión a internet',
+        _ => 'No fue posible iniciar sesión',
+      };
 }

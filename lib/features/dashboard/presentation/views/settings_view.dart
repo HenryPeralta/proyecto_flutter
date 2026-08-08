@@ -38,24 +38,30 @@ class SettingsView extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _LanguageOption(
-                  title: l10n.spanish,
-                  subtitle: 'ES',
-                  value: LocaleNotifier.spanish.languageCode,
+                RadioGroup<String>(
                   groupValue: selectedLanguage,
-                  onChanged: (_) {
-                    localeNotifier.setLocale(LocaleNotifier.spanish);
+                  onChanged: (value) {
+                    if (value == LocaleNotifier.spanish.languageCode) {
+                      localeNotifier.setLocale(LocaleNotifier.spanish);
+                    } else if (value == LocaleNotifier.english.languageCode) {
+                      localeNotifier.setLocale(LocaleNotifier.english);
+                    }
                   },
-                ),
-                const SizedBox(height: 8),
-                _LanguageOption(
-                  title: l10n.english,
-                  subtitle: 'EN',
-                  value: LocaleNotifier.english.languageCode,
-                  groupValue: selectedLanguage,
-                  onChanged: (_) {
-                    localeNotifier.setLocale(LocaleNotifier.english);
-                  },
+                  child: Column(
+                    children: [
+                      _LanguageOption(
+                        title: l10n.spanish,
+                        subtitle: 'ES',
+                        value: LocaleNotifier.spanish.languageCode,
+                      ),
+                      const SizedBox(height: 8),
+                      _LanguageOption(
+                        title: l10n.english,
+                        subtitle: 'EN',
+                        value: LocaleNotifier.english.languageCode,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -70,15 +76,11 @@ class _LanguageOption extends StatelessWidget {
   final String title;
   final String subtitle;
   final String value;
-  final String groupValue;
-  final ValueChanged<String?> onChanged;
 
   const _LanguageOption({
     required this.title,
     required this.subtitle,
     required this.value,
-    required this.groupValue,
-    required this.onChanged,
   });
 
   @override
@@ -89,8 +91,6 @@ class _LanguageOption extends StatelessWidget {
       child: RadioListTile<String>(
         activeColor: const Color(0xFFFF6A6A),
         value: value,
-        groupValue: groupValue,
-        onChanged: onChanged,
         title: Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.w700),

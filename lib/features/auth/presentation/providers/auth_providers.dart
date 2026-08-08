@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasources/local_auth_datasource.dart';
@@ -27,8 +29,10 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 
 // ============ DataSources Providers ============
 final remoteAuthDataSourceProvider = Provider<RemoteAuthDataSource>((ref) {
-  final dio = ref.watch(dioProvider);
-  return RemoteAuthDataSourceImpl(dio);
+  return RemoteAuthDataSourceImpl(
+    firebaseAuth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+  );
 });
 
 final localAuthDataSourceProvider = Provider<LocalAuthDataSource>((ref) {

@@ -1,83 +1,76 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:proyecto_flutter/features/history/domain/use_cases/history_use_case.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class HistoryState {
-  final String nameTitle;
-  final String emailTitle;
-  final String cardTitle;
-  final String accountNumberTitle;
-  final String balanceTitle;
-  final String monedaTitle;
-  final bool isLoading;
-  final String? errorMessage;
+import '../../domain/entities/transaction.dart';
+import '../../domain/entities/transaction_page.dart';
+import '../../domain/errors/transaction_exception.dart';
+import '../../domain/use_cases/get_transactions_page_use_case.dart';
 
-  const HistoryState({
-    this.nameTitle = '',
-    this.emailTitle = '',
-    this.cardTitle = '',
-    this.accountNumberTitle = '',
-    this.balanceTitle = '',
-    this.monedaTitle = '',
-    this.isLoading = false,
-    this.errorMessage,
-  });
+part 'history_provider.freezed.dart';
 
-  HistoryState copyWith({
-    String? nameTitle,
-    String? emailTitle,
-    String? cardTitle,
-    String? accountNumberTitle,
-    String? balanceTitle,
-    String? monedaTitle,
-    bool? isLoading,
+@freezed
+class HistoryState with _$HistoryState {
+  const factory HistoryState({
+    @Default(<Transaction>[]) List<Transaction> transactions,
+    @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
+    @Default(true) bool hasMore,
     String? errorMessage,
-    bool clearErrorMessage = false,
-  }) {
-    return HistoryState(
-      nameTitle: nameTitle ?? this.nameTitle,
-      emailTitle: emailTitle ?? this.emailTitle,
-      cardTitle: cardTitle ?? this.cardTitle,
-      accountNumberTitle: accountNumberTitle ?? this.accountNumberTitle,
-      balanceTitle: balanceTitle ?? this.balanceTitle,
-      monedaTitle: monedaTitle ?? this.monedaTitle,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage:
-          clearErrorMessage ? null : errorMessage ?? this.errorMessage,
-    );
-  }
+  }) = _HistoryState;
 }
 
 class HistoryNotifier extends StateNotifier<HistoryState> {
-  final HistoryUseCase _historyUseCase;
+  HistoryNotifier(this._getTransactionsPage, this._currentUserId)
+      : super(const HistoryState());
 
-  HistoryNotifier({HistoryUseCase? historyUseCase})
-      : _historyUseCase = historyUseCase ?? HistoryUseCase(),
-        super(const HistoryState());
+  final GetTransactionsPageUseCase _getTransactionsPage;
+  final String? Function() _currentUserId;
+  TransactionCursor? _cursor;
 
-  Future<void> userPerfil(String name, String email) async {
-    state = state.copyWith(isLoading: true, clearErrorMessage: true);
-
+  Future<void> loadFirstPage() async {
+    final userId = _currentUserId();
+    if (userId == null) return;
+    state = const HistoryState(isLoading: true);
     try {
-      final user = await _historyUseCase.call(name, email);
-      final account = await _historyUseCase.callAccount(name, email);
-      state = state.copyWith(
-        nameTitle: user.name,
-        emailTitle: user.email,
-        cardTitle: account.card,
-        accountNumberTitle: account.accountNumber,
-        balanceTitle: account.balance.toString(),
-        monedaTitle: account.moneda,
-        isLoading: false,
+      final page = await _getTransactionsPage(userId: userId);
+      _cursor = page.nextCursor;
+      state = HistoryState(transactions: page.items, hasMore: page.hasMore);
+    } catch (error) {
+      state = HistoryState(errorMessage: _friendlyError(error));
+    }
+  }
+
+  Future<void> loadNextPage() async {
+    final userId = _currentUserId();
+    if (userId == null || state.isLoadingMore || !state.hasMore) return;
+    state = state.copyWith(isLoadingMore: true, errorMessage: null);
+    try {
+      final page = await _getTransactionsPage(
+        userId: userId,
+        after: _cursor,
       );
-    } catch (e) {
+      _cursor = page.nextCursor ?? _cursor;
+      final byId = {for (final item in state.transactions) item.id: item};
+      for (final item in page.items) {
+        byId[item.id] = item;
+      }
       state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
+        transactions: byId.values.toList(),
+        isLoadingMore: false,
+        hasMore: page.hasMore,
+      );
+    } catch (error) {
+      state = state.copyWith(
+        isLoadingMore: false,
+        errorMessage: _friendlyError(error),
       );
     }
   }
-}
 
-final historyProvider = StateNotifierProvider<HistoryNotifier, HistoryState>(
-  (ref) => HistoryNotifier(),
-);
+  String _friendlyError(Object error) {
+    if (error is TransactionIndexRequiredException) {
+      return 'Firestore requiere el índice de transacciones. Despliega firestore.indexes.json.';
+    }
+    return 'No fue posible cargar las transacciones.';
+  }
+}

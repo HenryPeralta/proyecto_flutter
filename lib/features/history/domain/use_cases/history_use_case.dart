@@ -7,7 +7,7 @@ class HistoryUseCase {
   final HistoryRepository _dashboardRepository;
 
   HistoryUseCase({HistoryRepository? dashboardRepository})
-    : _dashboardRepository = dashboardRepository ?? HistoryRepositoryImpl();
+      : _dashboardRepository = dashboardRepository ?? HistoryRepositoryImpl();
 
   Future<User> call(String name, String email) async {
     return await _dashboardRepository.userPerfil(name, email);

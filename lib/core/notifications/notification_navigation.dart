@@ -44,7 +44,8 @@ class NotificationNavigation {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final context = rootNavigatorKey.currentContext;
       if (context == null) return;
-      final currentPath = GoRouterState.of(context).uri.path;
+      final router = GoRouter.of(context);
+      final currentPath = router.routeInformationProvider.value.uri.path;
       if (currentPath == Routes.login) {
         // Durante un arranque desde terminated, AuthNotifier todavía está
         // restaurando la sesión. LoginScreen consumirá el destino pendiente
@@ -53,12 +54,12 @@ class NotificationNavigation {
         return;
       }
       if (FirebaseAuth.instance.currentUser == null) {
-        context.go(Routes.login);
+        router.go(Routes.login);
         return;
       }
       final destination = consumePendingDestination();
       if (destination == null) return;
-      context.go(destination);
+      router.go(destination);
     });
   }
 

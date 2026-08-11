@@ -3,6 +3,10 @@ import 'package:proyecto_flutter/features/transfers/domain/entities/transfer_acc
 import 'package:proyecto_flutter/features/transfers/domain/use_cases/transfers_use_case.dart';
 import '../../domain/entities/transfer_request.dart';
 
+typedef TransferCompletedNotification = Future<void> Function({
+  required int amountInCents,
+});
+
 class TransfersState {
   final List<TransferAccount> sourceAccounts;
   final List<TransferAccount> destinationAccounts;
@@ -56,13 +60,16 @@ class TransfersNotifier extends StateNotifier<TransfersState> {
   TransfersNotifier({
     required TransfersUseCase transfersUseCase,
     required String? Function() currentUserId,
+    required TransferCompletedNotification showTransferCompleted,
   })  : _transfersUseCase = transfersUseCase,
         _currentUserId = currentUserId,
+        _showTransferCompleted = showTransferCompleted,
         super(const TransfersState()) {
     loadOptions();
   }
 
   final String? Function() _currentUserId;
+  final TransferCompletedNotification _showTransferCompleted;
 
   void loadOptions() {
     state = state.copyWith(
@@ -130,6 +137,12 @@ class TransfersNotifier extends StateNotifier<TransfersState> {
         ),
       );
       state = state.copyWith(isSubmitting: false, clearError: true);
+      try {
+        await _showTransferCompleted(amountInCents: amountInCents);
+      } catch (_) {
+        // La transferencia ya fue registrada; una falla al mostrar la
+        // notificación local no debe convertirla en una operación fallida.
+      }
       return true;
     } catch (_) {
       state = state.copyWith(

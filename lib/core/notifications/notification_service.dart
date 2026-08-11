@@ -9,6 +9,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'notification_navigation.dart';
 
+final notificationService = NotificationService();
+
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -88,6 +90,30 @@ class NotificationService {
     final token = await _messaging.getToken();
     if (user == null || token == null) return;
     await _deviceDocument(user.uid, token).delete();
+  }
+
+  Future<void> showTransferCompleted({
+    required int amountInCents,
+    String currency = 'GTQ',
+  }) async {
+    final amount = (amountInCents.abs() / 100).toStringAsFixed(2);
+    await _localNotifications.show(
+      id: DateTime.now().millisecondsSinceEpoch.remainder(1 << 31),
+      title: 'Transferencia realizada',
+      body: 'Tu transferencia de $currency $amount fue procesada correctamente.',
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'important_events',
+          'Eventos importantes',
+          channelDescription: 'Movimientos y eventos importantes de tu cuenta.',
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: 'ic_notification',
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      payload: jsonEncode({'route': '/history'}),
+    );
   }
 
   Future<void> _saveToken(String token) async {

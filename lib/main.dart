@@ -15,7 +15,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   try {
-    await NotificationService().initialize();
+    await notificationService.initialize();
   } catch (error) {
     // La app sigue funcionando si el usuario rechaza permisos o APNs/FCM
     // todavía no está configurado en el dispositivo.

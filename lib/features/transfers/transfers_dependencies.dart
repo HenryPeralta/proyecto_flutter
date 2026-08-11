@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/notifications/notification_service.dart';
+
 import 'data/data_sources/local_transfers_data_source.dart';
 import 'data/data_sources/remote_transfers_data_source.dart';
 import 'data/repositories/transfers_repository_impl.dart';
@@ -26,5 +28,7 @@ final transfersProvider =
   return TransfersNotifier(
     transfersUseCase: ref.watch(transfersUseCaseProvider),
     currentUserId: () => FirebaseAuth.instance.currentUser?.uid,
+    showTransferCompleted: ({required amountInCents}) => notificationService
+        .showTransferCompleted(amountInCents: amountInCents),
   );
 });

@@ -106,25 +106,25 @@ class _DialogAddAccountState extends State<DialogAddAccount> {
               ),
             ),
             const SizedBox(height: 20),
-            RadioListTile<SingingCharacter>(
-              title: Text(l10n.quetzal),
-              value: SingingCharacter.quetzal,
+            RadioGroup<SingingCharacter>(
               groupValue: _currency,
               onChanged: (value) {
                 setState(() {
                   _currency = value;
                 });
               },
-            ),
-            RadioListTile<SingingCharacter>(
-              title: Text(l10n.dollar),
-              value: SingingCharacter.dolar,
-              groupValue: _currency,
-              onChanged: (value) {
-                setState(() {
-                  _currency = value;
-                });
-              },
+              child: Column(
+                children: [
+                  RadioListTile<SingingCharacter>(
+                    title: Text(l10n.quetzal),
+                    value: SingingCharacter.quetzal,
+                  ),
+                  RadioListTile<SingingCharacter>(
+                    title: Text(l10n.dollar),
+                    value: SingingCharacter.dolar,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -6,9 +6,12 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/providers/auth_notifier.dart';
 import '../../features/dashboard/presentation/views/dashboard_layout.dart';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 // Crear el router una sola vez, sin depender de authState
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: Routes.login,
     routes: [
       GoRoute(
@@ -17,11 +20,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
+        path: Routes.history,
+        redirect: (context, state) =>
+            '${Routes.dashboard}?section=history',
+      ),
+      GoRoute(
+        path: Routes.transactions,
+        redirect: (context, state) =>
+            '${Routes.dashboard}?section=history',
+      ),
+      GoRoute(
         name: Routes.dashboard,
         path: Routes.dashboard,
         builder: (context, state) {
-          // Crear un widget simple sin Consumer para evitar loops
-          return const _DashboardSimplePage();
+          final section = state.uri.queryParameters['section'];
+          return _DashboardSimplePage(
+            initialPage:
+                section == 'history' ? MenuItem.history : MenuItem.dashboard,
+          );
         },
       ),
     ],
@@ -38,28 +54,29 @@ final routerProvider = Provider<GoRouter>((ref) {
 abstract class Routes {
   static const String login = '/login';
   static const String dashboard = '/dashboard';
+  static const String history = '/history';
+  static const String transactions = '/transactions';
 }
 
 class _DashboardSimplePage extends ConsumerWidget {
-  const _DashboardSimplePage();
+  const _DashboardSimplePage({required this.initialPage});
+
+  final MenuItem initialPage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('🏠 _DashboardSimplePage build()');
     final authState = ref.watch(authNotifierProvider);
 
     return authState.maybeWhen(
       authenticated: (response) {
-        print('✅ Dashboard - Autenticado: ${response.user.email}');
-
         // Definir el callback aquí donde tenemos ref
         void handleLogout() {
-          print('🚪 Logout');
           ref.read(authNotifierProvider.notifier).logout();
           // El widget se reconstruirá automáticamente cuando el estado cambie
         }
 
         return DashboardLayout(
+          initialPage: initialPage,
           userName: '${response.user.firstName} ${response.user.lastName}',
           userEmail: response.user.email,
           onLogout: handleLogout,
@@ -71,7 +88,6 @@ class _DashboardSimplePage extends ConsumerWidget {
         );
       },
       error: (message) {
-        print('❌ Dashboard Error: $message');
         return Scaffold(
           body: Center(
             child: Text(AppLocalizations.of(context)!.errorMessage(message)),
@@ -79,7 +95,6 @@ class _DashboardSimplePage extends ConsumerWidget {
         );
       },
       orElse: () {
-        print('🔄 Dashboard - No autenticado');
         return const LoginScreen();
       },
     );

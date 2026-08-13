@@ -26,54 +26,69 @@ class CardClient extends ConsumerWidget {
                     : Assets.cardMastercard,
                 fit: BoxFit.cover,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 36,
-                  vertical: 30,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dashboard.nameTitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontFamily: 'Poppins',
-                      ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final scale = (constraints.maxWidth / 527).clamp(0.50, 1.0);
+                  final horizontalPadding = 36 * scale;
+                  final verticalPadding = 24 * scale;
+                  final detailSize = (18 * scale).clamp(11.0, 18.0);
+                  final gap = (12 * scale).clamp(5.0, 12.0);
+
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: verticalPadding,
                     ),
-                    const Spacer(),
-                    Text(
-                      dashboard.cardTitle,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dashboard.nameTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: (26 * scale).clamp(15.0, 26.0),
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          dashboard.cardTitle,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: detailSize,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        SizedBox(height: gap),
+                        Text(
+                          dashboard.accountNumberTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: detailSize,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        SizedBox(height: gap),
+                        Text(
+                          '${dashboard.monedaTitle} ${dashboard.balanceTitle}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: (24 * scale).clamp(14.0, 24.0),
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      dashboard.accountNumberTitle,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      '${dashboard.monedaTitle} ${dashboard.balanceTitle}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),

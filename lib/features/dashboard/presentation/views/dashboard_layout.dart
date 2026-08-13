@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
+import '../../../../core/notifications/notification_navigation.dart';
 import 'dashboard_view.dart';
 import 'settings_view.dart';
 import '../../../history/presentation/views/history_trans_view.dart';
@@ -16,12 +17,14 @@ class DashboardLayout extends StatefulWidget {
   final String userName;
   final String userEmail;
   final VoidCallback? onLogout;
+  final MenuItem initialPage;
 
   const DashboardLayout({
     super.key,
     required this.userName,
     required this.userEmail,
     this.onLogout,
+    this.initialPage = MenuItem.dashboard,
   });
 
   @override
@@ -29,7 +32,7 @@ class DashboardLayout extends StatefulWidget {
 }
 
 class _DashboardLayoutState extends State<DashboardLayout> {
-  MenuItem currentPage = MenuItem.dashboard;
+  late MenuItem currentPage;
 
   // Lista de vistas disponibles
   late Map<MenuItem, Widget> _views;
@@ -37,6 +40,10 @@ class _DashboardLayoutState extends State<DashboardLayout> {
   @override
   void initState() {
     super.initState();
+    currentPage = widget.initialPage;
+    NotificationNavigation.historyRequests.addListener(
+      _openHistoryFromNotification,
+    );
     _views = {
       MenuItem.dashboard: DashboardView(
         userName: widget.userName,
@@ -46,6 +53,27 @@ class _DashboardLayoutState extends State<DashboardLayout> {
       MenuItem.transfer: const Transfers(),
       MenuItem.settings: const SettingsView(),
     };
+  }
+
+  void _openHistoryFromNotification() {
+    if (!mounted || currentPage == MenuItem.history) return;
+    setState(() => currentPage = MenuItem.history);
+  }
+
+  @override
+  void dispose() {
+    NotificationNavigation.historyRequests.removeListener(
+      _openHistoryFromNotification,
+    );
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant DashboardLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialPage != widget.initialPage) {
+      setState(() => currentPage = widget.initialPage);
+    }
   }
 
   void _navigateToPage(MenuItem page) {
@@ -133,7 +161,7 @@ class _DashboardLayoutState extends State<DashboardLayout> {
 
             // Contenido blanco
             Expanded(
-              child: Container(
+              child: Material(
                 color: Colors.white,
                 child: Column(
                   children: [
@@ -216,13 +244,10 @@ class _DashboardLayoutState extends State<DashboardLayout> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Container(
-        decoration: isSelected
-            ? BoxDecoration(
-                color: const Color(0xFFFFE4D6),
-                borderRadius: BorderRadius.circular(12),
-              )
-            : null,
+      child: Material(
+        color: isSelected ? const Color(0xFFFFE4D6) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
         child: ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

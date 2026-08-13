@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "392666081069",
+    "project_id": "walllet-bank",
+    "storage_bucket": "walllet-bank.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392666081069:android:07b3487c60f00bfa9e15a4",
+        "android_client_info": {
+          "package_name": "com.example.proyecto_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxLX0QHQKVl3LaebDE4lFYU9JwA6mSLf8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

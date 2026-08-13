@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_flutter/core/app_colors.dart';
-import 'package:proyecto_flutter/features/transfers/presentation/state/transfers_provider.dart';
+import 'package:proyecto_flutter/features/transfers/transfers_dependencies.dart';
 
 class MenuTransfer extends ConsumerWidget {
   const MenuTransfer({super.key});
@@ -68,12 +68,10 @@ class ButtonIconTransfer extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton.icon(
       style: TextButton.styleFrom(
-        backgroundColor: selected
-            ? AppColors.secondaryVariant
-            : Colors.grey[600],
-        foregroundColor: selected
-            ? AppColors.secondaryVariant
-            : Colors.grey[600],
+        backgroundColor:
+            selected ? AppColors.secondaryVariant : Colors.grey[600],
+        foregroundColor:
+            selected ? AppColors.secondaryVariant : Colors.grey[600],
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(20),
         ),

@@ -18,11 +18,7 @@ class LocalAuthDataSourceImpl implements LocalAuthDataSource {
 
   @override
   Future<void> saveSession(LoginResponseModel response) async {
-    await sharedPreferences.setString(
-      _sessionKey,
-      jsonEncode(response.toJson()),
-    );
-    await sharedPreferences.setString(_tokenKey, response.accessToken);
+    // Firebase Auth administra la sesión; nunca se persisten tokens aquí.
   }
 
   @override

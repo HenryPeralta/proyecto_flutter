@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:proyecto_flutter/l10n/app_localizations.dart';
 
 import '../../../dashboard/presentation/widgets/dashboard_header.dart';
-import '../../history_dependencies.dart';
 import '../../domain/entities/transaction.dart';
+import '../../history_dependencies.dart';
 import '../state/history_provider.dart';
 
 class HistoryTransView extends ConsumerStatefulWidget {
@@ -16,19 +16,38 @@ class HistoryTransView extends ConsumerStatefulWidget {
 }
 
 class _HistoryTransViewState extends ConsumerState<HistoryTransView> {
+  static const _pageSize = 15;
   final _scrollController = ScrollController();
+  int _pageIndex = 0;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(historyProvider.notifier).loadFirstPage());
-    _scrollController.addListener(_onScroll);
   }
 
-  void _onScroll() {
-    if (_scrollController.position.extentAfter < 250) {
-      ref.read(historyProvider.notifier).loadNextPage();
+  Future<void> _refresh() async {
+    setState(() => _pageIndex = 0);
+    await ref.read(historyProvider.notifier).loadFirstPage();
+  }
+
+  Future<void> _nextPage(HistoryState state) async {
+    final nextPageStart = (_pageIndex + 1) * _pageSize;
+    if (nextPageStart >= state.transactions.length && state.hasMore) {
+      await ref.read(historyProvider.notifier).loadNextPage();
     }
+    if (!mounted) return;
+    final updated = ref.read(historyProvider);
+    if (nextPageStart < updated.transactions.length) {
+      setState(() => _pageIndex++);
+      _scrollController.jumpTo(0);
+    }
+  }
+
+  void _previousPage() {
+    if (_pageIndex == 0) return;
+    setState(() => _pageIndex--);
+    _scrollController.jumpTo(0);
   }
 
   @override
@@ -61,43 +80,110 @@ class _HistoryTransViewState extends ConsumerState<HistoryTransView> {
       return _Message(
         icon: Icons.cloud_off,
         message: state.errorMessage!,
-        action: () => ref.read(historyProvider.notifier).loadFirstPage(),
+        action: _refresh,
       );
     }
     if (state.transactions.isEmpty) {
       return _Message(
         icon: Icons.receipt_long_outlined,
         message: 'Aún no tienes transacciones.',
-        action: () => ref.read(historyProvider.notifier).loadFirstPage(),
+        action: _refresh,
       );
     }
 
+    final start = _pageIndex * _pageSize;
+    final safeStart = start < state.transactions.length ? start : 0;
+    final proposedEnd = safeStart + _pageSize;
+    final end = proposedEnd < state.transactions.length
+        ? proposedEnd
+        : state.transactions.length;
+    final pageItems = state.transactions.sublist(safeStart, end);
+    final canGoNext = end < state.transactions.length || state.hasMore;
+
     return RefreshIndicator(
-      onRefresh: () => ref.read(historyProvider.notifier).loadFirstPage(),
+      onRefresh: _refresh,
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(vertical: 12),
-        itemCount: state.transactions.length + 1,
+        itemCount: pageItems.length + 1,
         itemBuilder: (context, index) {
-          if (index == state.transactions.length) {
-            if (state.isLoadingMore) {
-              return const Padding(
-                padding: EdgeInsets.all(20),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Text(state.hasMore ? '' : 'No hay más transacciones'),
-              ),
+          if (index == pageItems.length) {
+            return _PaginationControls(
+              pageNumber: _pageIndex + 1,
+              itemCount: pageItems.length,
+              isLoading: state.isLoadingMore,
+              canGoPrevious: _pageIndex > 0,
+              canGoNext: canGoNext,
+              onPrevious: _previousPage,
+              onNext: () => _nextPage(state),
             );
           }
-          return _TransactionTile(transaction: state.transactions[index]);
+          return _TransactionTile(transaction: pageItems[index]);
         },
       ),
     );
   }
+}
+
+class _PaginationControls extends StatelessWidget {
+  const _PaginationControls({
+    required this.pageNumber,
+    required this.itemCount,
+    required this.isLoading,
+    required this.canGoPrevious,
+    required this.canGoNext,
+    required this.onPrevious,
+    required this.onNext,
+  });
+
+  final int pageNumber;
+  final int itemCount;
+  final bool isLoading;
+  final bool canGoPrevious;
+  final bool canGoNext;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Text('Página $pageNumber · $itemCount transacciones'),
+            const SizedBox(height: 10),
+            if (isLoading)
+              const Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 8),
+                  Text('Cargando siguiente página...'),
+                ],
+              )
+            else
+              Wrap(
+                spacing: 10,
+                children: [
+                  if (canGoPrevious)
+                    OutlinedButton.icon(
+                      onPressed: onPrevious,
+                      icon: const Icon(Icons.chevron_left),
+                      label: const Text('Página anterior'),
+                    ),
+                  if (canGoNext)
+                    FilledButton.icon(
+                      onPressed: onNext,
+                      icon: const Icon(Icons.chevron_right),
+                      label: const Text('Siguiente página'),
+                    ),
+                ],
+              ),
+            if (!canGoNext) ...[
+              const SizedBox(height: 4),
+              const Text('No hay más transacciones'),
+            ],
+          ],
+        ),
+      );
 }
 
 class _TransactionTile extends StatelessWidget {
@@ -121,8 +207,10 @@ class _TransactionTile extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: color,
-          child: Icon(income ? Icons.arrow_downward : Icons.arrow_upward,
-              color: Colors.white),
+          child: Icon(
+            income ? Icons.arrow_downward : Icons.arrow_upward,
+            color: Colors.white,
+          ),
         ),
         title: Text(transaction.description),
         subtitle: Text('$date · ${transaction.status}'),
@@ -136,8 +224,11 @@ class _TransactionTile extends StatelessWidget {
 }
 
 class _Message extends StatelessWidget {
-  const _Message(
-      {required this.icon, required this.message, required this.action});
+  const _Message({
+    required this.icon,
+    required this.message,
+    required this.action,
+  });
 
   final IconData icon;
   final String message;
